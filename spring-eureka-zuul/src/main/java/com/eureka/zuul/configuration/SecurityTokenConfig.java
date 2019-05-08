@@ -32,7 +32,7 @@ public class SecurityTokenConfig extends WebSecurityConfigurerAdapter {
 		   .addFilterAfter(new JwtTokenAuthenticationFilter(jwtConfig), UsernamePasswordAuthenticationFilter.class)
 		// authorization requests config
 		.authorizeRequests()
-			.antMatchers("/swagger-ui.html", "/image/v2/api-docs", "/webjars/**", "/swagger-resources/**").permitAll()
+			.antMatchers("/swagger-ui.html", "/image/v2/api-docs", "/webjars/**", "/swagger-resources/**" ,"/image/**").permitAll()
 		   // allow all who are accessing "auth" service
 		   .antMatchers(HttpMethod.POST, jwtConfig.getUri()).permitAll()  
 		   // must be an admin if trying to access admin area (authentication is also required here)
