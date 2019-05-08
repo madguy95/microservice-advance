@@ -1,0 +1,7 @@
+#This configuration file will hold common configs to be shared among all files
+eureka:
+  instance:
+    prefer-ip-address: true
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/
