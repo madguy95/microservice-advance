@@ -1,0 +1,20 @@
+
+spring:
+  application.name: monitor-application
+  
+server:  
+  port: ${PORT:8686}
+  
+#eureka:
+#  client:
+#    serviceUrl:
+#      defaultZone: http://localhost:8761/eureka/
+#    registryFetchIntervalSeconds: 1
+#  instance:
+#    leaseRenewalIntervalInSeconds: 1
+#    
+#management.endpoints.health.enabled: true
+#
+#turbine:
+#  appConfig: image-service
+#  clusterNameExpression: "'default'"

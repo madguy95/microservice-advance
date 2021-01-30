@@ -1,0 +1,26 @@
+server:  
+  port: ${PORT:8762}
+
+logging:
+  level:
+    org.springframework.cloud.netflix.zuul: TRACE
+      
+zuul:
+  ignoredServices: '*'
+  host:
+    connect-timeout-millis: 20000
+    socket-timeout-millis: 20000
+  routes:  
+    auth:
+      path: /auth/**
+      sensitiveHeaders: Cookie,Set-Cookie
+      serviceId: auth-service
+      stripPrefix: false
+    gallery:
+      path: /gallery/**
+      sensitiveHeaders: 
+      serviceId: gallery-service
+    image:
+      path: /image/**
+      sensitiveHeaders: 
+      serviceId: image-service

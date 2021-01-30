@@ -1,0 +1,6 @@
+server:  
+  port: ${PORT:8200}
+
+logging:
+  level:
+    org.springframework.security: DEBUG
