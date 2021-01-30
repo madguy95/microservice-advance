@@ -1,10 +1,7 @@
 package com.eureka.client;
 
-import java.io.FileReader;
 import java.io.IOException;
 
-import org.apache.maven.model.Model;
-import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
 import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -30,16 +27,14 @@ public class ImageServiceApplication {
 		SpringApplication.run(ImageServiceApplication.class, args);
 	}
 
-	 @Bean
-	    public Docket api() throws IOException, XmlPullParserException {
-	        MavenXpp3Reader reader = new MavenXpp3Reader();
-	        Model model = reader.read(new FileReader("pom.xml"));
-	        return new Docket(DocumentationType.SWAGGER_2)  
-	          .select() 
-	          .apis(RequestHandlerSelectors.basePackage("com.eureka.client.controller"))
-	          .paths(PathSelectors.any())                          
-	          .build().apiInfo(new ApiInfo("Account Service Api Documentation", 
-	        		  "Documentation automatically generated", model.getParent().getVersion(), 
-	        		  null, new Contact("Piotr Mińkowski", "piotrminkowski.wordpress.com", "piotr.minkowski@gmail.com"), null, null));                                           
-	    }
+	@Bean
+	public Docket api() throws IOException, XmlPullParserException {
+		return new Docket(DocumentationType.SWAGGER_2).select()
+				.apis(RequestHandlerSelectors.basePackage("com.eureka.client.controller")).paths(PathSelectors.any())
+				.build()
+				.apiInfo(new ApiInfo("Account Service Api Documentation", "Documentation automatically generated",
+						"1.0", null, new Contact("Tinh Nguyen", "tinhnx@rikkeisoft.com", "tinhnx@rikkeisoft.com"), null,
+						null));
+	}
 }
+

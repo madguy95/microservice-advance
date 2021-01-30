@@ -1,0 +1,92 @@
+version: '3'
+services:
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.5.2
+    volumes:
+      - ./containers/elasticsearch/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    environment:
+      ES_JAVA_OPTS: "-Xmx256m -Xms256m"
+
+  logstash:
+    image: docker.elastic.co/logstash/logstash:7.5.2
+    command: -f /etc/logstash/conf.d/
+    volumes:
+      - ./containers/logstash/logstash.conf:/etc/logstash/conf.d/logstash.conf
+      - ./containers/logstash/gallery-logs.conf:/etc/logstash/conf.d/gallery-logs.conf
+      - /home/zu/project/logs:/home/logs
+    ports:
+      - "5000:5000"
+      - "9600:9600"
+    environment:
+      LS_JAVA_OPTS: "-Xmx256m -Xms256m"
+    depends_on:
+      - elasticsearch
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:7.5.2
+    volumes:
+      - ./containers/kibana/kibana.yml:/usr/share/kibana/config/kibana.yml
+    ports:
+      - "5601:5601"
+    depends_on:
+      - elasticsearch
+  config-server:
+    build: './config-server'
+    ports:
+      - "8888:8888"
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "--silent", "http://localhost:8888/actuator/health"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
+    depends_on:
+      - logstash
+  spring-eureka-server:
+    build: './spring-eureka-server'
+    depends_on:
+      config-server:
+        condition: service_healthy
+    ports:
+      - "8761:8761"
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "--silent", "http://localhost:8761/actuator/health"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+  spring-eureka-zuul:
+    build: './spring-eureka-zuul'
+    depends_on:
+      spring-eureka-server:
+        condition: service_healthy
+    ports:
+      - "8762:8762"
+  auth-service:
+    build: './auth-service'
+    depends_on:
+      spring-eureka-server:
+        condition: service_healthy
+    ports:
+      - "9999:9999"
+  gallery-service:
+    build: './gallery-service'
+    depends_on:
+      spring-eureka-server:
+        condition: service_healthy
+    ports:
+      - "8100:8100"
+    volumes:
+      - /home/zu/project/logs/:/home/zu/project/logs/
+  image-service:
+    build: './image-service'
+    depends_on:
+      spring-eureka-server:
+        condition: service_healthy
+    ports:
+      - "8200:8200"
+    volumes:
+      - /home/zu/project/logs/:/home/zu/project/logs/

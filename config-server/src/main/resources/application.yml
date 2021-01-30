@@ -1,4 +1,6 @@
 spring:
+  application:
+    name: config-server #name of the application
   cloud:
     config:
       server:

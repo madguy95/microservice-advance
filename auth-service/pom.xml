@@ -48,9 +48,9 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>com.eureka.client</groupId>
+			<groupId>com.eureka</groupId>
 			<artifactId>common-service</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
+			<version>1.0-SNAPSHOT</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-starter-config -->
 		<dependency>
